@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/runspired/ember-skyrocket.png?label=ready&title=Ready)](https://waffle.io/runspired/ember-skyrocket)
 # Ember-skyrocket
 
 This README outlines the details of collaborating on this Ember addon.
