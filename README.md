@@ -1,6 +1,22 @@
 # Ember-skyrocket
 
-This README outlines the details of collaborating on this Ember addon.
+Skyrocket is an attempt to utilize DOMless Ember and `fastboot` mechanisms to
+provide a simple interface for building advanced multi-threaded applications.
+
+Skyrocket wants to help you separate your app's major concerns.
+
+- `data-threads` for data requests and processing
+- `ui-threads` for pre-rendering
+- `service-threads` for long running tasks
+- `helper-threads` for parallel computing
+
+As well, Skyrocket wants to bring the concept of the `route stack` to Ember
+Applications, making it easy to bring native quality gestures and animations
+to transitions.
+
+You can read more about this idea here: http://blog.runspired.com/2015/06/05/using-webworkers-to-bring-native-app-best-practices-to-javascript-spas/
+
+
 
 ## Installation
 
