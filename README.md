@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/runspired/ember-skyrocket.png?label=ready&title=Ready)](https://waffle.io/runspired/ember-skyrocket)
 # Ember-skyrocket
 
 Skyrocket is an attempt to utilize DOMless Ember and `fastboot` mechanisms to
