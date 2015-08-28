@@ -2,6 +2,8 @@ bower_components/
 tests/
 tmp/
 dist/
+.idea
+.DS_Store
 
 .bowerrc
 .editorconfig
@@ -10,5 +12,6 @@ dist/
 .npmignore
 **/.gitkeep
 bower.json
+ember-cli-build.js
 Brocfile.js
 testem.json
