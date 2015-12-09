@@ -9,6 +9,16 @@
   2. [Creating the Worker](#creating-the-worker)
   3. [Worker Primitives](#worker-primitives)
   4. [Using a Worker](#using-a-worker)
+3. [Implementation Details](#implementation-details)
+  1. [WorkerService](#workerservice)
+  2. [Interface](#interface)
+  3. [Inject Helper](#inject-helper)
+  4. [WorkerShell](#workershell)
+  5. [WorkerApp](#workerapp)
+  6. [Worker](#worker)
+  7. [Shared Worker](#shared-worker)
+  8. [Service Worker](#service-worker)
+  9. [Build Tooling](#build-tooling)
 
 ### Overview
 Skyrocket is an attempt to eliminate the friction of building and using Workers, unlocking applications that consistently function at 60fps even in the most advanced use cases in hostile environments.
@@ -147,3 +157,67 @@ inject.worker('foo')  // uses foo:main
 inject.worker('foo:main') // looks up an instance of worker 'foo' named 'main', instantiates if needed.
 inject.worker('foo:bar') // looks up an instance of worker 'foo' named 'bar', instantiates if needed.
 ```
+
+### Implementation Details
+
+#### WorkerService
+
+Responsibilities
+- Stores feature/API detection results
+- Sets up backburner queues for when it’s necessary to execute worker modules on the main thread.
+
+
+#### Interface
+
+Responsibilities
+- Models interaction between the worker and the main thread.
+- Instantiates the worker / tears it down as necessary.
+- Runs feature detection if needed
+- Provides abstractions overtop of postMessage so that developers can interact with the worker via more typical asynchronous programming patterns.
+
+#### Inject Helper
+
+Responsibilities
+- lazily resolve an interface and instantiate it if necessary
+- allow multiple workers of the same type to co-exist with separate names
+
+#### WorkerShell
+
+Responsibilities
+- fallback for when the Worker api is not available on a platform
+- creates an isolated scope for the module with worker-like APIs
+- executes worker tasks in backburner queues that occur after `afterRender`.
+  - potentially in the next tick
+  - should it run the worker in an iFrame (clean scope, separate memory context)?
+
+#### WorkerApp
+
+Responsibilities
+- instantiates the worker (within the worker context)
+- performs feature detection work if necessary
+
+#### Worker
+
+Responsibilities
+- Provides abstractions overtop of postMessage so that developers can interact between the worker and the main thread via more typical asynchronous programming patterns.
+- Implements the worker end of the Interface
+
+#### Shared Worker
+
+Responsibilities
+- Extends Worker, uses SharedWorker base class if available, else falls back to worker + main thread polyfill.
+  - Do we want to do this? Can we channel between workers another way?
+
+#### Service Worker
+
+- Only One is allowed
+- Extends SharedWorker, uses ServiceWorker base class if available, else falls back to SharedWorker (and beyond).
+  - Should the fallback do things like utilize AppCache?
+
+#### Build Tooling
+
+Packaging
+- You write a worker as any other ES6 module, but it has to be a single script when executed.  We’ll use babel + broccoli + register a custom filter tree with ember-cli-packager to build 2 final output files, one for the main-thread fallback and one as the stand-alone worker script.
+
+Engines
+- We can probably load the main thread worker into the app via the engine mechanics if needed, else some simple ajax fetching / module resolution primitives will get the job done.
