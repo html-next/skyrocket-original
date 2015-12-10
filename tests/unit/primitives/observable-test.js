@@ -1,4 +1,4 @@
-import observable from '../../../lib/primitives/observable';
+import observable from 'skyrocket/lib/primitives/observable';
 import { module, test } from 'qunit';
 
 module('Unit | Primitive | observable');

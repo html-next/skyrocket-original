@@ -1,4 +1,4 @@
-import event from '../../../lib/primitives/event';
+import event from 'skyrocket/lib/primitives/event';
 import { module, test } from 'qunit';
 
 module('Unit | Primitive | event');

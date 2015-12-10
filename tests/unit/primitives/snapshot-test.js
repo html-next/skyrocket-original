@@ -1,4 +1,4 @@
-import snapshot from '../../../lib/primitives/snapshot';
+import snapshot from 'skyrocket/lib/primitives/snapshot';
 import { module, test } from 'qunit';
 
 module('Unit | Primitive | snapshot');

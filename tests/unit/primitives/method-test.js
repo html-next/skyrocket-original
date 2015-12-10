@@ -1,4 +1,4 @@
-import method from '../../../lib/primitives/method';
+import method from 'skyrocket/lib/primitives/method';
 import { module, test } from 'qunit';
 
 module('Unit | Primitive | method');

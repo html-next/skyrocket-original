@@ -1,4 +1,4 @@
-import injectWorker from '../../../utils/inject-worker';
+import injectWorker from 'skyrocket/utils/inject-worker';
 import { module, test } from 'qunit';
 
 module('Unit | Utility | inject worker');

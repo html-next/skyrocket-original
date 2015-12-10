@@ -1,15 +1,10 @@
-import Ember from "ember";
+/* global self */
+import Ember from 'ember';
 
 // Further Reading
 // https://developer.mozilla.org/en-US/docs/Web/API/Worker/Functions_and_classes_available_to_workers
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
 // https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent
-
-// Thoughts
-// Pushing SharedWorker support forward would be huge
-// Pushing transferableFragment support forward would be huge
-// Pushing Workers being able to spawn Workers forward would be huge
-// So much huge.
 
 export default Ember.Service.extend({
 
@@ -50,19 +45,19 @@ export default Ember.Service.extend({
 
   isWorker: typeof window === 'undefined',
 
-  detectFeatures: function() {
-    let global = this.global;
+  detectFeatures() {
+    const { global } = this;
 
     // simple detection
     this.setProperties({
-      dedicatedWorkers: !!global.Worker,
-      sharedWorkers: !!global.SharedWorker,
-      localStorage: !!global.localStorage,
-      webSockets: !!global.WebSocket
+      dedicatedWorkers: Boolean(global.Worker),
+      sharedWorkers: Boolean(global.SharedWorker),
+      localStorage: Boolean(global.localStorage),
+      webSockets: Boolean(global.WebSocket)
     });
 
     // transfer abilities detection
-    let testWorker = new Worker('/assets/workers/worker-features.js');
+    const testWorker = new Worker('/assets/workers/worker-features.js');
 
     // check JSON transfer
     try {
@@ -75,13 +70,14 @@ export default Ember.Service.extend({
       return;
     }
 
-    //detect ability to use Transferable Objects
+    // detect ability to use Transferable Objects
     // bonobo.js does a decent feature detection job
     // https://github.com/f5io/bonobo-js/blob/master/lib/bonobo.js
     // https://github.com/f5io/bonobo-js/blob/v2.2.0/dist/bonobo.js
     if (typeof ArrayBuffer !== 'undefined') {
       try {
-        var ab = new ArrayBuffer(1);
+        const ab = new ArrayBuffer(1);
+
         testWorker.postMessage(ab, [ab]);
         if (!ab.byteLength) {
           this.set('transfers.transferableObjects', true);
@@ -96,7 +92,7 @@ export default Ember.Service.extend({
 
   },
 
-  init: function() {
+  init() {
     this.detectFeatures();
     this._super();
   }

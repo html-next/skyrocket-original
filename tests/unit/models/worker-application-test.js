@@ -1,12 +1,10 @@
-import { moduleForModel, test } from 'ember-qunit';
+import Model from 'skyrocket/lib/worker-application';
+import { module, test } from 'qunit';
 
-moduleForModel('worker-application', 'Unit | Model | worker application', {
-  // Specify the other units that are required for this test.
-  needs: []
-});
+module('worker-application', 'Unit | Model | worker application');
 
 test('it exists', function(assert) {
-  let model = this.subject();
+  let model = Model;
   // let store = this.store();
   assert.ok(!!model);
 });

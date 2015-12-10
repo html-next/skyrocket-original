@@ -1,12 +1,10 @@
-import { moduleForModel, test } from 'ember-qunit';
+import Model from 'skyrocket/lib/interface';
+import { module, test } from 'qunit';
 
-moduleForModel('interface', 'Unit | Model | interface', {
-  // Specify the other units that are required for this test.
-  needs: []
-});
+module('interface', 'Unit | Model | interface');
 
 test('it exists', function(assert) {
-  let model = this.subject();
+  let model = Model;
   // let store = this.store();
   assert.ok(!!model);
 });

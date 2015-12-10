@@ -1,6 +1,5 @@
-function myFunction() {
+import { Worker } from 'skyrocket';
 
-}
+export default Worker.extend({
 
-var myProp;
-
+});

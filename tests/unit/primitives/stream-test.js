@@ -1,4 +1,4 @@
-import stream from '../../../lib/primitives/stream';
+import stream from 'skyrocket/lib/primitives/stream';
 import { module, test } from 'qunit';
 
 module('Unit | Primitive | stream');
