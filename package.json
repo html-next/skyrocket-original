@@ -7,17 +7,29 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "ember build",
     "start": "ember server",
-    "test": "ember try:testall"
+    "build": "ember build",
+    "suave": "jscs addon app tests --fix",
+    "test": "ember try:testall",
+    "lint": "eslint -c .eslintrc addon/",
+    "lint-all": "eslint -c .eslintrc app/ addon/ tests/",
+    "lint-staged": "git diff --diff-filter=ACMRTUXB --cached --name-only | grep '*.js' | grep -v 'node_modules' | grep -v 'tests' | xargs eslint -c .eslintrc"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/runspired/skyrocket"
+  },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 4.1.1"
+  },
+  "ghooks": {
+    "pre-commit": "PATH=$PATH:/usr/local/bin:/usr/local/sbin && npm run lint-staged && npm run suave",
+    "pre-push": "PATH=$PATH:/usr/local/bin:/usr/local/sbin && npm run lint"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^4.1.6",
     "broccoli-asset-rev": "^2.2.0",
     "ember-cli": "1.13.13",
     "ember-cli-app-version": "^1.0.0",
@@ -32,10 +44,14 @@
     "ember-cli-sri": "^1.2.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "1.13.15",
+    "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
-    "ember-disable-prototype-extensions": "^1.0.0",
-    "ember-try": "~0.0.8"
+    "ember-suave": "1.2.3",
+    "ember-try": "~0.0.8",
+    "eslint": "^1.10.3",
+    "eslint-config-ember": "^0.2.0",
+    "jscs": "^2.7.0"
   },
   "keywords": [
     "ember-addon",
