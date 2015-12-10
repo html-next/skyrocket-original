@@ -1,7 +1,7 @@
 {
-  "name": "ember-skyrocket",
+  "name": "skyrocket",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Ambitious applications aren't single threaded",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -38,7 +38,17 @@
     "ember-try": "~0.0.8"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "multi threaded",
+    "threading",
+    "performancs",
+    "60fps",
+    "worker",
+    "serviceWorker",
+    "webWorker",
+    "background",
+    "task",
+    "service"
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.5"

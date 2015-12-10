@@ -1,13 +1,17 @@
-import Interface from "./models/interface";
-import Func from "./attrs/function";
-import Prop from "./attrs/property";
-import Event from "./attrs/event";
-import SendEvent from "./attrs/send-event";
+import Interface from './lib/interface';
+import Worker from './lib/worker';
+import Primitives from './lib/primitives/index';
 
-export default {
-  Interface: Interface,
-  func: Func,
-  prop: Prop,
-  event: Event,
-  sendEvent: SendEvent,
+export {
+  Interface,
+  Worker,
+  Primitives
 };
+
+const Skyrocket = {
+  Interface,
+  Worker,
+  Primitives
+};
+
+export default Skyrocket;
