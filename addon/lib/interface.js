@@ -1,5 +1,5 @@
-import Composable from './object/index';
+import EmberRuntime from 'ember-runtime';
 
-export default new Composable({
+export default EmberRuntime.Object.extend({
   _isInterface: true
 });

@@ -1,7 +1,7 @@
 import Model from 'skyrocket/lib/interface';
 import { module, test } from 'qunit';
 
-module('interface', 'Unit | Model | interface');
+module('interface', 'Unit | Lib | interface');
 
 test('it exists', function(assert) {
   let model = Model;
