@@ -1,5 +1,5 @@
-import EmberRuntime from 'ember-runtime';
+import Ember from 'ember';
 
-export default EmberRuntime.Object.extend({
+export default Ember.Object.extend({
   _isInterface: true
 });

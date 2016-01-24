@@ -2,8 +2,8 @@
 'use strict';
 var path = require('path');
 
-var Funnel = require('broccoli-funnel');
-var mergeTrees = require('broccoli-merge-trees');
+// var Funnel = require('broccoli-funnel');
+// var mergeTrees = require('broccoli-merge-trees');
 
 module.exports = {
   name: 'skyrocket',
@@ -20,14 +20,18 @@ module.exports = {
       app = app.app;
     }
 
-    var pathToRuntime = path.join(this.treePaths.vendor, 'ember-runtime/ember-runtime.js');
-
-    app.import(pathToRuntime);
-
+    this.includeEmberRuntime(app);
     return app;
   },
 
+  includeEmberRuntime: function(app) {
+    //var pathToRuntime = path.join(this.treePaths.vendor, 'ember-runtime/ember-runtime.js');
+    //app.import(pathToRuntime);
+  },
+
   treeForVendor: function(vendorTree) {
+    return vendorTree;
+    /*
     var trees = [];
 
     if (vendorTree) {
@@ -42,6 +46,7 @@ module.exports = {
     }));
 
     return mergeTrees(trees);
+    */
   }
 
 };
