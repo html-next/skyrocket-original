@@ -1,9 +1,6 @@
 /* jshint node: true */
 'use strict';
-var path = require('path');
-
-var Funnel = require('broccoli-funnel');
-var mergeTrees = require('broccoli-merge-trees');
+var workerTree = require('./lib/worker-tree');
 
 module.exports = {
   name: 'skyrocket',
@@ -20,28 +17,12 @@ module.exports = {
       app = app.app;
     }
 
-    var pathToRuntime = path.join(this.treePaths.vendor, 'ember-runtime/ember-runtime.js');
-
-    app.import(pathToRuntime);
-
+    this._trueApp = app;
     return app;
   },
 
-  treeForVendor: function(vendorTree) {
-    var trees = [];
-
-    if (vendorTree) {
-      trees.push(vendorTree);
-    }
-
-    var pathToEmber = path.join(this.project.bowerDirectory, 'ember');
-
-    trees.push(new Funnel(pathToEmber, {
-      destDir: 'ember-runtime',
-      include: ['ember-runtime.js']
-    }));
-
-    return mergeTrees(trees);
+  treeForPublic: function() {
+    return workerTree.call(this, this._trueApp);
   }
 
 };

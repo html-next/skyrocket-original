@@ -10,10 +10,7 @@
     "start": "ember server",
     "build": "ember build",
     "suave": "jscs addon app tests --fix",
-    "test": "ember try:testall",
-    "lint": "eslint -c .eslintrc addon/",
-    "lint-all": "eslint -c .eslintrc app/ addon/ tests/",
-    "lint-staged": "git diff --diff-filter=ACMRTUXB --cached --name-only | grep '*.js' | grep -v 'node_modules' | grep -v 'tests' | xargs eslint -c .eslintrc"
+    "test": "ember try:testall"
   },
   "repository": {
     "type": "git",
@@ -23,46 +20,41 @@
     "node": ">= 4.1.1"
   },
   "ghooks": {
-    "pre-commit": "PATH=$PATH:/usr/local/bin:/usr/local/sbin && npm run lint-staged && npm run suave",
-    "pre-push": "PATH=$PATH:/usr/local/bin:/usr/local/sbin && npm run lint"
+    "pre-commit": "npm run suave",
+    "pre-push": "npm run suave"
   },
-  "author": "",
+  "author": "Chris Thoburn (@runspired)",
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "^4.1.6",
-    "broccoli-asset-rev": "^2.2.0",
-    "broccoli-funnel": "^1.0.1",
-    "broccoli-merge-trees": "^1.1.0",
-    "ember-cli": "1.13.13",
+    "broccoli-asset-rev": "^2.4.2",
+    "broccoli-stew": "^1.2.0",
+    "ember-cli": "2.3.0-beta.1",
     "ember-cli-app-version": "^1.0.0",
-    "ember-cli-content-security-policy": "^0.4.0",
+    "ember-cli-changelog": "^0.3.4",
     "ember-cli-dependency-checker": "^1.2.0",
-    "ember-cli-htmlbars": "^1.0.1",
+    "ember-cli-htmlbars": "^1.0.2",
     "ember-cli-htmlbars-inline-precompile": "^0.3.1",
     "ember-cli-ic-ajax": "0.2.4",
     "ember-cli-inject-live-reload": "^1.4.0",
-    "ember-cli-qunit": "^1.1.0",
-    "ember-cli-release": "^0.2.8",
-    "ember-cli-sri": "^1.2.0",
-    "ember-cli-toolbelts": "^0.2.2",
+    "ember-cli-qunit": "^1.2.1",
+    "ember-cli-release": "0.2.8",
+    "ember-cli-sri": "2.0.0",
+    "ember-cli-toolbelts": "^0.3.3",
     "ember-cli-uglify": "^1.2.0",
-    "ember-data": "1.13.15",
     "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
     "ember-getowner-polyfill": "1.0.0",
-    "ember-resolver": "2.0.3",
+    "ember-resolver": "^2.0.3",
     "ember-suave": "1.2.3",
     "ember-try": "0.0.8",
-    "eslint": "^1.10.3",
-    "eslint-config-ember": "^0.2.0",
     "jscs": "^2.7.0"
   },
   "keywords": [
     "ember-addon",
     "multi threaded",
     "threading",
-    "performancs",
+    "performance",
     "60fps",
     "worker",
     "serviceWorker",
@@ -72,7 +64,15 @@
     "service"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.5"
+    "broccoli-funnel": "^1.0.1",
+    "broccoli-babel-transpiler": "^5.5.0",
+    "broccoli-concat": "^2.1.0",
+    "broccoli-merge-trees": "1.1.1",
+    "broccoli-plugin": "^1.2.1",
+    "ember-cli-babel": "^5.1.5",
+    "rollup": "^0.25.3",
+    "rollup-plugin-includepaths": "^0.1.0",
+    "rsvp": "^3.2.0"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"

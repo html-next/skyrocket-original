@@ -1,5 +1,20 @@
-import EmberRuntime from 'ember-runtime';
+import Ember from 'ember';
 
-export default EmberRuntime.Object.extend({
-  _isWorker: true
+const {
+  inject
+  } = Ember;
+
+export default Ember.Object.extend({
+  'interface': null,
+  _isWorkerFactory: true,
+
+  _features: inject.service('worker-features'),
+
+  _connect() {},
+
+  init() {
+    this._super();
+    this.initialize();
+  }
+
 });
