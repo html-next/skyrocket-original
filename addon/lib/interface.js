@@ -1,5 +1,12 @@
 import Ember from 'ember';
+import Transport from './metal/transport';
 
 export default Ember.Object.extend({
-  _isInterface: true
+  _isWorkerInterfaceFactory: true,
+  transport: null,
+
+  init() {
+    this._super();
+    this.transport = new Transport();
+  }
 });

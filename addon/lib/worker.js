@@ -1,5 +1,20 @@
 import Ember from 'ember';
 
+const {
+  inject
+  } = Ember;
+
 export default Ember.Object.extend({
-  _isWorker: true
+  'interface': null,
+  _isWorkerFactory: true,
+
+  _features: inject.service('worker-features'),
+
+  _connect() {},
+
+  init() {
+    this._super();
+    this.initialize();
+  }
+
 });
