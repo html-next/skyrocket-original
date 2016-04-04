@@ -1,17 +1,13 @@
-import Ember from 'ember';
-import Interface from './lib/interface';
-import Worker from './lib/worker';
-import Primitives from './lib/primitives/index';
+import Contract from './lib/contract';
+import Primitives from 'primitives/index';
 
 export {
-  Interface,
-  Worker,
+  Contract,
   Primitives
 };
 
 const Skyrocket = {
-  Interface,
-  Worker,
+  Contract,
   Primitives
 };
 
