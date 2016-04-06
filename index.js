@@ -1,6 +1,6 @@
 /* jshint node: true */
 'use strict';
-var workerTree = require('./lib/worker-tree');
+var treeForWorkers = require('./lib/tree-for-workers');
 
 module.exports = {
   name: 'skyrocket',
@@ -22,7 +22,7 @@ module.exports = {
   },
 
   treeForPublic: function() {
-    return workerTree.call(this, this._trueApp);
+    return treeForWorkers.call(this, this._trueApp);
   }
 
 };
