@@ -1,15 +1,5 @@
-export default class Contract {
+import SkyrocketObject from '../-private/object/index';
 
-  constructor(options) {
-    this.options = options;
-  }
-
-  static extend(options) {
-    return new Contract(options);
-  }
-
-  static create(options) {
-    return new Contract(options);
-  }
-
-}
+export default SkyrocketObject.extend({
+  _isContractFactory: true
+});

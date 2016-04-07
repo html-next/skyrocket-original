@@ -1,6 +1,9 @@
-import { Worker } from 'skyrocket';
-import Interface from './interface';
+import Ember from 'ember';
 
-export default Worker.extend({
-  'interface': Interface
+const {
+  Object: Obj
+  } = Ember;
+
+export default Obj.extend({
+
 });
