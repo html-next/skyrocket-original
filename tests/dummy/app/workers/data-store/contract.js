@@ -1,15 +1,7 @@
-import { Contract, Primitives } from 'skyrocket';
+import { Contract } from 'skyrocket';
+import { method, event, snapshot, array, object, task } from 'skyrocket/primitives';
 
-const {
-  method,
-  event,
-  snapshot,
-  array,
-  object,
-  task
-  } = Primitives;
-
-export default Contract.create({
+export default Contract.extend({
   fetch: method(),
   message: event(),
   forceLogout: event({ outbound: false }),

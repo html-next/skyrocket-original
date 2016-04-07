@@ -8,56 +8,50 @@ Skyrocket
 Skyrocket enables you to build multi-threaded applications, helping you create apps
  that consistently function at 60fps even in the most advanced use cases in hostile environments.
 
-- [Overview](./OVERVIEW.md)
-- [Terminology Guide](./Terminology.md)
-
-
 ## Installation
 
 `ember install skyrocket-engine`
 
 
-## Usage
-
-
-### Scaffolding A Worker
+### Scaffold A Worker
 
 ```cli
-ember g worker data-store
+ember g worker <worker-name>
 ```
 
 Produces the following:
 ```cli
-  /app/workers/data-store/
-     interface.js
+  /app/workers/<worker-name>/
+     contract.js
      worker.js
 ```
 
-When building or serving your ember application, this worker will be built as
-as stand alone file located at `/assets/workers/data-store.js`.
+When building or serving your ember application, `<worker-name>/worker.js` will be built as
+as stand alone file located at `/assets/workers/<worker-name>.js`, while
+`<worker-name>/contract.js` will be loaded into your app.
 
 ### Imports
 
-Currently any module from your `app`, from an `addon`, and `Ember` can be imported.
+Your worker can take full advantage of `es6` imports.
 
 ### Restrictions
 
-Importing from `bower_components` and non-addons is not currently possible, nor is
- the Browser environment currently shimmed.  In the near future, you will be able
- to provide your worker a browser shim as well.
+Workers are workers, if a module does something that uses a browser API
+that's not available in a worker, it will error. In the near future, 
+you will be able to import environment stubs to provide your worker needed
+ browser shims as well.
  
- 
- 
+
 ## Creating Your First Worker
 
-### The interface
+### The Contract
 
-The interface is a "model" of your Worker's exposed API.  It represents the
+The contract is a "model" of your Worker's exposed API.  It represents the
 asynchronous methods, events, and properties (called snapshots) which will be available
 to your app.
 
 ```js
-import { Interface, Primitives:p } from 'skyrocket';
+import { Contract, Primitives:p } from 'skyrocket';
 
 export default Interface.extend({
   foo: p.snapshot(),

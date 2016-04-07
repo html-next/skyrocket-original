@@ -1,5 +1,5 @@
 {
-  "name": "skyrocket",
+  "name": "skyrocket-engine",
   "version": "0.0.0",
   "description": "Ambitious applications aren't single threaded",
   "directories": {

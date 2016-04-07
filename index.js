@@ -3,7 +3,7 @@
 var treeForWorkers = require('./lib/tree-for-workers');
 
 module.exports = {
-  name: 'skyrocket',
+  name: 'skyrocket-engine',
 
   isDevelopingAddon: function() {
     return true;
