@@ -1,3 +1,10 @@
+/*
+ * WorkerService
+ *
+ *
+ *
+ * @private
+ */
 import Ember from 'ember';
 
 const {

@@ -5,21 +5,90 @@ Skyrocket
 [![Build Status](https://travis-ci.org/runspired/skyrocket.svg)](https://travis-ci.org/runspired/skyrocket)
 [![Ember Observer Score](http://emberobserver.com/badges/skyrocket.svg)](http://emberobserver.com/addons/skyrocket)
 
-Skyrocket is an attempt to eliminate the friction of building and using Workers,
-unlocking applications that consistently function at 60fps even in the most advanced
-use cases in hostile environments.  [Read More](./OVERVIEW.md)
-
-- [Terminology Guide](./Terminology.md)
-
+Skyrocket enables you to build multi-threaded applications, helping you create apps
+ that consistently function at 60fps even in the most advanced use cases in hostile environments.
 
 ## Installation
 
 `ember install skyrocket-engine`
 
 
-## Usage
+### Scaffold A Worker
 
-<coming soon> See the [Overview](./OVERVIEW.md) for detailed implementation details.
+```cli
+ember g worker <worker-name>
+```
+
+Produces the following:
+```cli
+  /app/workers/<worker-name>/
+     contract.js
+     worker.js
+```
+
+When building or serving your ember application, `<worker-name>/worker.js` will be built as
+as stand alone file located at `/assets/workers/<worker-name>.js`, while
+`<worker-name>/contract.js` will be loaded into your app.
+
+### Imports
+
+Your worker can take full advantage of `es6` imports.
+
+### Restrictions
+
+Workers are workers, if a module does something that uses a browser API
+that's not available in a worker, it will error. In the near future, 
+you will be able to import environment stubs to provide your worker needed
+ browser shims as well.
+ 
+
+## Creating Your First Worker
+
+### The Contract
+
+The contract is a "model" of your Worker's exposed API.  It represents the
+asynchronous methods, events, and properties (called snapshots) which will be available
+to your app.
+
+```js
+import { Contract, Primitives:p } from 'skyrocket';
+
+export default Interface.extend({
+  foo: p.snapshot(),
+  bar: p.method(),
+  baz: p.event({ outbound: false }), // specify an inbound (to the main thread) only event
+  spam: p.event({ inbound: false }) // specify an outbound (to the worked) only event
+});
+```
+
+### The worker
+
+The Worker is the stand alone mini-application that will be created when an Interface is instantiated.
+It should implement the primitives that the Interface defines.
+
+```js
+import { Worker } from 'skyrocket';
+import api from './interface';
+
+export default Worker.extend({
+  'interface': api,
+
+  // foo is a property, but also a snapshot.
+  // whenever foo updates, it's new state will
+  // be updated on the app
+  foo: 'hello world',
+
+  // bar can be invoked from app
+  // it's return can be a value or a promise
+  bar() {
+    this.send('baz', {}); // send the baz event to the app
+  },
+  onSpam: on('spam', function() {}) // do something when the worker receives the spam event
+});
+```
+
+
+## Using Your Worker
 
 
 ## Fastboot

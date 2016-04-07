@@ -1,3 +1,18 @@
-<h2 id="title">Welcome to Ember</h2>
+<h2 id="title">Worker Demo</h2>
 
-{{outlet}}
+<h3>Snapshot</h3>
+<p>
+  I am {{if dataStore.online 'online' 'offline'}}
+</p>
+
+<h3>ObjectProxy</h3>
+<p>
+  The user's name is {{dataStore.user.name}}
+</p>
+
+<h3>ArrayProxy</h3>
+<ol>
+  {{#each dataStore.friends as |friend|}}
+    <li>{{friend.name}}</li>
+  {{/each}}
+</ol>
