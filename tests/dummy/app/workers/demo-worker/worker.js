@@ -3,5 +3,6 @@ import api from './interface';
 
 export default Worker.extend({
   'interface': api,
-  myFunction: function() {}
+  myFunction() {},
+  totallyUniqueFunctionName() {}
 });
