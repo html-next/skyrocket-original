@@ -14,7 +14,9 @@ export default Ember.Object.extend({
 
   init() {
     this._super();
-    this.initialize();
+    if (this.initialize && typeof this.initialize === 'function') {
+      this.initialize();
+    }
   }
 
 });

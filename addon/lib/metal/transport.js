@@ -10,7 +10,7 @@ function ifDefined(o) {
 }
 
 const GLOBAL_ENV = ifDefined(self) || ifDefined(global) || ifDefined(window);
-const SYSTEM_TYPE = '-system';
+/*const SYSTEM_TYPE = '-system';*/
 const SYSTEM_QUERY = '-system-query';
 
 export default class Transport {
@@ -36,14 +36,14 @@ export default class Transport {
       });
     });
 
-    this.src.addEventListener('error', (...args) => {
+    this.src.addEventListener('error', (/*...args*/) => {
       if (this.isWorker) {
         this.send({
 
         });
-      } else {
+      }/* else {
 
-      }
+      }*/
     });
   }
 
@@ -76,7 +76,7 @@ export default class Transport {
       this._send({
         type: SYSTEM_QUERY,
         name: 'json-transfer',
-        data: {name: 'JSON usability test'}
+        data: { name: 'JSON usability test' }
       });
       features.json = true;
     } catch (e) {
@@ -84,7 +84,7 @@ export default class Transport {
     }
 
     if (features.json) {
-      //detect Structured Cloning and Transferable Objects
+      // detect Structured Cloning and Transferable Objects
       if (typeof ArrayBuffer !== 'undefined') {
         try {
           const ab = new ArrayBuffer(1);

@@ -22,7 +22,21 @@ module.exports = {
   },
 
   treeForPublic: function() {
-    return workerTree.call(this, this._trueApp);
+    this.workerTree = workerTree.call(this, this._trueApp);
+    return this.workerTree;
+  },
+
+  contentFor: function(type, config, content) {
+    if(type === 'body-footer') {
+      var bodyFooterContent = '';
+      var workerNames = this.workerTree.workerNames;
+      for(var i=0, l=workerNames.length; i<l; i++) {
+        bodyFooterContent += '<script src="assets/workers/' + workerNames[i] + '.js"></script>';
+      }
+      this.ui.writeLine(bodyFooterContent);
+      return bodyFooterContent;
+    }
+    return '';
   }
 
 };
