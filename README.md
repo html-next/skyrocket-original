@@ -1,26 +1,89 @@
-# skyrocket
+# Skyrocket
 
-This README outlines the details of collaborating on this Ember addon.
+Ambitious applications aren't single threaded.
+
+Skyrocket provides build tooling and a standardized messaging interface
+for quickly building and using WebWorkers in your application.
 
 ## Installation
 
-* `git clone <repository-url>` this repository
-* `cd skyrocket`
-* `npm install`
+```cli
+yarn add @html-next/skyrocket
+```
 
-## Running
+## Workers
 
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
+To create a new worker, add a javascript file defining and exporting a 
+single class to the `app/workers` directory. Or run the following command:
 
-## Running Tests
+```cli
+ember g worker <worker-name>
+```
 
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+## The Worker Interface
 
-## Building
+Skyrocket provides primitives for communicating between your 
+application and your worker. These primitives should be used as
+decorators on your worker class.
 
-* `ember build`
+#### Methods
 
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+```js
+class Worker {
+  @method
+  greet() {
+    return 'Hello World';
+  }
+}
+```
+
+#### Signals
+
+```js
+class Worker {
+  @method
+  greet() {
+    this.say('Hello World');
+  }
+}
+```
+
+#### Properties
+
+```js
+class Worker {
+  @prop
+  get name() {
+    return this._name;
+  }
+  set name(v) {
+    this._name = v;
+  }
+}
+```
+
+#### Events
+
+```js
+class Worker {
+  @event
+  click() {
+    this.say('Click!');
+  }
+}
+```
+
+```js
+class Worker {
+  @event({ sends: true, receives: false })
+  click() {
+    this.say('Click!');
+  }
+}
+```
+
+## The Worker Magic
+
+
+## Using a Worker in your app.
+
