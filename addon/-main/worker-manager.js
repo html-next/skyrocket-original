@@ -7,7 +7,7 @@ function define(context, meta, type, name) {
         enumerable: true,
         writable: false,
         configurable: false,
-        value: function(...args) {
+        value(...args) {
           return context._transport.expect(['method', name, args]);
         }
       });
@@ -18,7 +18,7 @@ function define(context, meta, type, name) {
         enumerable: true,
         writable: false,
         configurable: false,
-        value: function(...args) {
+        value(...args) {
           context._transport.send(['signal', name, args]);
         }
       });

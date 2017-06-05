@@ -109,26 +109,29 @@ module.exports = {
   },
 
   treeForAddon: function(tree) {
-    console.log('treeForAddon');
-    let privateTree = new Funnel(tree, {
-      exclude: [
-        isProductionEnv() ? '-debug' : false,
-      ].filter(Boolean)
-    });
-
-    let mainTree = new Funnel(privateTree, {
-      include: [ '-debug/**.js', '-main/**/**.js' ],
+    let mainTree = new Funnel(tree, {
+      srcDir: '-main',
       destDir: '.'
     });
 
-    let workerTree = new Funnel(privateTree, {
-      include: [ '-debug/**.js', '-workers/**/**.js' ],
+    let workerTree = new Funnel(tree, {
+      srcDir: '-workers',
       destDir: '.'
     });
 
-    this.addonTreeForWorkers = debug(workerTree, { name: 'addon-tree-for-workers' });
+    if (!isProductionEnv()) {
+      let privateTree = new Funnel(tree, {
+        srcDir: '-debug',
+        destDir: '-debug'
+      });
 
-    mainTree = debug(mainTree, { name: 'addon-tree-for-main' });
+      workerTree = new Funnel(mergeTrees([workerTree, privateTree]), {
+        destDir: 'skyrocket'
+      });
+      mainTree = mergeTrees([mainTree, privateTree]);
+    }
+
+    this.addonTreeForWorkers = workerTree;
 
     return this._super.treeForAddon ?
       this._super.treeForAddon.call(this, mainTree) :
@@ -182,18 +185,13 @@ module.exports = {
   },
 
   _workerScopeTree(tree) {
-    console.log('_workerScopeTree');
     // grab addon modules
     const addonTrees = addonTreesFor(this.project, 'addon');
-
-    console.log('adding addonTreeForWorkers');
-    addonTrees.push(this.addonTreeForWorkers);
-
     const mergedAddons = mergeTrees(addonTrees);
-    const funneledAddons = new Funnel(mergedAddons, {
-      srcDir: 'modules',
-      allowEmpty: true
-    });
+    const funneledAddons = debug(new Funnel(mergedAddons, {
+      allowEmpty: true,
+      destDir: 'modules'
+    }), { name: 'addon-tree' });
 
     // combine with app
     return mergeTrees([funneledAddons, tree]);
@@ -202,8 +200,12 @@ module.exports = {
 
 function addonTreesFor(project, type) {
   return project.addons.map(function(addon) {
-    if (addon.treeFor) {
+    if (addon.name !== 'skyrocket' && addon.treeFor) {
       return addon.treeFor(type);
+    } else if (addon.name === 'skyrocket' && addon.treeFor) {
+      let ret = addon.treeFor(type);
+
+      return type === 'addon' ? addon.addonTreeForWorkers : ret;
     }
   }).filter(Boolean);
 }
