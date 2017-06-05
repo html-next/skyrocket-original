@@ -26,6 +26,7 @@
     "babel6-plugin-remove-imports": "^6.0.0",
     "babel6-plugin-strip-class-callcheck": "^6.0.0",
     "broccoli-babel-transpiler": "^6.0.0",
+    "broccoli-dependency-funnel": "^2.0.1",
     "broccoli-funnel": "^1.2.0",
     "broccoli-merge-trees": "^2.0.0",
     "broccoli-node-info": "^1.1.0",
