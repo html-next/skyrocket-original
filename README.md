@@ -87,3 +87,34 @@ class Worker {
 
 ## Using a Worker in your app.
 
+```js
+import injectWorker from 'skyrocket/inject';
+...
+{
+  dataWorker: injectWorker('data-worker'),
+  
+  doSomething() {
+    const dataWorker = this.dataWorker;
+    
+    // execute the @signal myFunction with some data
+    dataWorker.myFunction(<...args>);
+    
+    // trigger the @event 'click'
+    dataWorker.trigger('click', { some: 'data' });
+
+    // listen for the @event 'fetched'
+    dataWorker.on('fetched', (event) => {
+    
+    });
+
+    // see the last known state of @prop foo
+    const foo = dataWorker.foo;
+
+    // await the return of some @method doSomething
+    return dataWorker.doSomething({ good: 'for you' })
+      .then((result) => {})
+      .catch((error) => {});
+  }
+  
+}
+```
