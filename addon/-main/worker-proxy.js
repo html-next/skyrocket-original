@@ -42,9 +42,10 @@ function define(context, meta, type, name) {
 }
 
 export default class WorkerManager {
-  constructor(schema) {
-    const meta = Object.create(null);
-    this._transport = new Transport(schema, meta);
+  constructor(transport) {
+    this._transport = transport;
+
+    const { schema, meta } = transport;
 
     if (schema.method) {
       for (let i = 0; i < schema.method.length; i++) {
@@ -70,6 +71,7 @@ export default class WorkerManager {
   }
 
   subscribe(eventName, handler, token) {
+    // TODO validate eventName is valid
     let handlers = this._transport.events[eventName] = this._transport.events[eventName] || [];
     handlers.push(handler, token);
   }
@@ -90,6 +92,7 @@ export default class WorkerManager {
   }
 
   trigger(eventName, event) {
+    // TODO validate eventName is valid
     this._transport.send(['event', eventName, event]);
   }
 }

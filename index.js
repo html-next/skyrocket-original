@@ -1,13 +1,17 @@
 /* jshint node: true */
 'use strict';
+const fs = require('fs');
+const path = require('path');
 const StripClassCallCheck = require('babel6-plugin-strip-class-callcheck');
 const FilterImports = require('babel-plugin-filter-imports');
 const RemoveImports = require('babel6-plugin-remove-imports');
 const Funnel = require('broccoli-funnel');
 const mergeTrees = require('broccoli-merge-trees');
+const DependencyFunnel = require('broccoli-dependency-funnel');
 const debug = require('broccoli-stew').debug;
 const ExtractWorkerSchemas = require('./lib/babel-plugin-generate-decorator-schema');
 const WorkerCompiler = require('./lib/worker-compiler');
+const Reducer = require('./lib/reducer');
 
 function isProductionEnv() {
   var isProd = /production/.test(process.env.EMBER_ENV);
@@ -38,7 +42,7 @@ module.exports = {
   },
 
   buildBabelOptions() {
-    const workerPrefix = 'workers/';
+    const workerPrefix = this._trueApp.name + '/workers/';
     const workerSchemas = this.workerSchemas = {};
 
     process.__skyrocketWorkerSchemas = workerSchemas;
@@ -143,11 +147,26 @@ module.exports = {
     const babel = this.addons.find(addon => addon.name === 'ember-cli-babel');
     const app = this._trueApp;
     const tree = app.trees.app;
-    const workersWithDependenciesTree = this._workerScopeTree(tree);
+    const workersWithDependenciesTree = debug(this._workerScopeTree(tree), { name: 'pre-resolution-tree' });
     const babelOptions = this.options.babel;
+    const appName = app.name;
 
-    // TODO filter based on rollup resolution first, but without actually rolling-up
-    const transpiled = debug(babel.transpileTree(workersWithDependenciesTree, {
+    const dependenciesTree = debug(new Reducer(workersWithDependenciesTree, {
+      split(inputPath) {
+        const dir = fs.readdirSync(path.join(inputPath, appName, 'workers'));
+        return dir.map(function(name) {
+          return [name, { entry: `${appName}/workers/${name}` }];
+        });
+      },
+      reduce(localTree, options) {
+        return new DependencyFunnel(localTree, {
+          include: true,
+          entry: options.entry
+        });
+      },
+    }), { name: 'resolution-tree' });
+
+    const transpiled = debug(babel.transpileTree(dependenciesTree, {
       babel: babelOptions,
       'ember-cli-babel': {
         compileModules: false
@@ -158,7 +177,7 @@ module.exports = {
     const assembled = new WorkerCompiler(transpiled, {
       appName: app.name,
       workerSchemas: workerSchemas,
-      workerPrefix: 'workers/',
+      workerPrefix: `${appName}/workers/`,
       workerDestDir: 'assets/workers/'
     });
 
@@ -190,11 +209,13 @@ module.exports = {
     const mergedAddons = mergeTrees(addonTrees);
     const funneledAddons = debug(new Funnel(mergedAddons, {
       allowEmpty: true,
-      destDir: 'modules'
     }), { name: 'addon-tree' });
+    const appTree = new Funnel(tree, {
+      destDir: this._trueApp.name
+    });
 
     // combine with app
-    return mergeTrees([funneledAddons, tree]);
+    return mergeTrees([funneledAddons, appTree]);
   },
 };
 

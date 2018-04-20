@@ -1,115 +1,131 @@
-/* global global, self, window */
 import Ember from 'ember';
+import WorkerProxy from './worker-proxy';
+import assert from 'skyrocket/-debug';
 
 const {
-  run
+  run,
+  propertyDidChange
 } = Ember;
 
-function ifDefined(o) {
-  return typeof o !== 'undefined' ? o : false;
-}
+const SYSTEM_QUERY_TYPE = '-system-query';
 
-const GLOBAL_ENV = ifDefined(self) || ifDefined(global) || ifDefined(window);
-/* const SYSTEM_TYPE = '-system';*/
-const SYSTEM_QUERY = '-system-query';
+export default class WorkerTransport {
+  constructor(schema) {
+    this.meta = Object.create(null);
+    this.proxy = new WorkerProxy(schema);
+    this.src = meta.src || `./assets/${schema.moduleName}.js`;
+    this.worker = new Worker(this.src);
+    this.events = Object.create(null);
 
-export default class Transport {
-
-  constructor(src, schema, meta) {
-    this.src = src || GLOBAL_ENV;
-    this.isMaster = !!src;
-    this.isWorker = !src;
-    this.options = options;
-
-    this.connect();
-    if (!options.skipDetection) {
-      this.detectTransportFeatures();
-    }
-
+    this.__ready = null;
+    this.initWorker();
   }
 
-  connect() {
-    // send ping
-    this.src.addEventListener('message', (...args) => {
-      run.schedule('sync', () => {
-        this._receive(...args);
-      });
-    });
+  initWorker() {
+    return new Promise((resolve, reject) => {
+      const worker = this.worker;
 
-    this.src.addEventListener('error', (/* ...args */) => {
-      if (this.isWorker) {
-        this.send({
-
-        });
-      }/* else {
-
-       }*/
+      worker.onmessage = () => {
+        this.setupWorkerHandler();
+        resolve();
+      };
     });
   }
 
-  send() {
-
-  }
-
-  _send() {
-    this.src.postMessage(...arguments);
-  }
-
-  receive() {
-
-  }
-
-  detectTransportFeatures() {
-    if (this.isMaster) {
-      return;
-    }
-
-    const features = {
-      json: false,
-      cloning: false,
-      transferable: false,
-      channels: false
+  setupWorkerHandler() {
+    this.worker.onmessage = (msg, opts) => {
+      this.receiveData(msg, opts);
     };
+  }
 
-    // check JSON transfer
-    try {
-      this._send({
-        type: SYSTEM_QUERY,
-        name: 'json-transfer',
-        data: { name: 'JSON usability test' }
-      });
-      features.json = true;
-    } catch(e) {
-      // Worker does not support anything but strings
+  receiveData(msg, opts) {
+    throw new Error('not implemented');
+  }
+
+  sendData(data, buffers) {
+    if (buffers) {
+      this.worker.postMessage(data, buffers);
+    } else {
+      this.worker.postMessage(data);
     }
+  }
 
-    if (features.json) {
-      // detect Structured Cloning and Transferable Objects
-      if (typeof ArrayBuffer !== 'undefined') {
-        try {
-          const ab = new ArrayBuffer(1);
+  triggerEvent(name, event) {
+    const handlers = this.events[name];
 
-          this._send({
-            type: SYSTEM_QUERY,
-            name: 'buffer-transfer',
-            data: ab
-          }, [ab]);
+    if (Array.isArray(handlers)) {
+      run.join(() => {
+        for (let i = 0; i < handlers.length; i++) {
+          handlers[i](event);
+        }
+      });
+    }
+  }
 
-          // if the byteLength is 0, the content of the buffer was transferred
-          features.transferable = !ab.byteLength;
-          features.cloning = !features.transferable;
+  setProperty(name, value) {
+    assert(`Cannot set property, not a valid schema property`, this.schema.prop && this.schema.prop.indexOf(name) !== -1);
+    this.meta[name] = value;
+    this.notifyProxy(name);
+  }
 
-        } catch(e) {
-          // neither feature is available
+  notifyProxy(name) {
+    run.join(() => {
+      propertyDidChange(this.proxy, name);
+    });
+  }
+
+  detectFeatures() {
+    const _test = this;
+
+    return new Promise((resolve) => {
+      const features = {
+        strings: true,
+        json: false,
+        cloning: false,
+        transfer: false,
+        channels: false
+      };
+
+      // check JSON transfer
+      try {
+        _test._send({
+          type: SYSTEM_QUERY_TYPE,
+          name: 'json-transfer',
+          data: { name: 'JSON usability test' }
+        });
+        features.json = true;
+      } catch (e) {
+        // Worker does not support anything but strings
+      }
+
+      if (features.json) {
+        //detect Structured Cloning and Transferable Objects
+        if (typeof ArrayBuffer !== 'undefined') {
+          try {
+            const ab = new ArrayBuffer(1);
+
+            _test._send({
+              type: SYSTEM_QUERY_TYPE,
+              name: 'buffer-transfer',
+              data: ab
+            }, [ab]);
+
+            // if the byteLength is 0, the content of the buffer was transferred
+            features.transfer = !ab.byteLength;
+            features.cloning = !features.transfer;
+
+          } catch (e) {
+            // neither feature is available
+          }
         }
       }
-    }
 
-    // check channels
-    if (ifDefined(MessageChannel)) {
-      features.channels = true;
-    }
+      // check channels
+      if (typeof MessageChannel !== 'undefined') {
+        features.channels = true;
+      }
 
-    this.features.transport = features;
+      resolve(features);
+    });
   }
 }

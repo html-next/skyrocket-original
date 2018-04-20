@@ -1,41 +1,53 @@
 import {
-  event,
-  method,
   signal,
   prop
 } from 'skyrocket/decorators';
 
 export default class DataWorker {
   constructor() {
-    this._x = 1;
+    this._running = false;
+    this._currentTime = 0;
+    this.options = null;
   }
 
-  @method
-  query(modelName, options) {
-    return Promise.resolve({
-      data: {
-        type: modelName,
-        id: '1',
-        attributes: {
-          name: 'Chris Thoburn'
-        }
-      }
-    });
+  tick() {
+    this.currentTime += this.options.duration;
+  }
+
+  scheduleTick() {
+    setTimeout(() => {
+      this.tick();
+    }, this.options.duration);
+  }
+
+  @signal
+  startTimer(options = {}) {
+    if (this._running === true) {
+      return;
+    }
+
+    options.duration = options.duration || 1000;
+
+    this.running = true;
+    this.options = options;
+    this.currentTime = 0;
+    this.scheduleTick();
   }
 
   @prop
-  get x() {
-    return this._x;
+  get running() {
+    return this._running;
   }
-  set x(x) {
-    this._x = x;
-    this._y = 2 * x;
-    return this._x;
+  set running(v) {
+    this._running = v;
   }
 
   @prop
-  get y() {
-    return this._y;
+  get currentTime() {
+    return this._currentTime;
+  }
+  set currentTime(v) {
+    this._currentTime = v;
   }
 }
 
