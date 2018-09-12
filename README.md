@@ -29,10 +29,7 @@ We'll make it work by 0.2.x
 
 ## Support, Questions, Collaboration
 
-Join the [skyrocket](https://embercommunity.slack.com/messages/skyrocket/) channel on Slack.
-
-[![Slack Status](https://ember-community-slackin.herokuapp.com/badge.svg)](https://ember-community-slackin.herokuapp.com/)
-
+Join the [Ember community on Discord](https://discord.gg/zT3asNS)
 
 ## Status
 
