@@ -1,6 +1,8 @@
 Skyrocket
 =========
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/html-next/skyrocket.svg)](https://greenkeeper.io/)
+
 [![npm version](https://badge.fury.io/js/skyrocket-engine.svg)](http://badge.fury.io/js/skyrocket-engine)
 [![Build Status](https://travis-ci.org/runspired/skyrocket.svg)](https://travis-ci.org/runspired/skyrocket)
 [![Ember Observer Score](http://emberobserver.com/badges/skyrocket.svg)](http://emberobserver.com/addons/skyrocket)
